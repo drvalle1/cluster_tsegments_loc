@@ -37,12 +37,10 @@ sample.z=function(dat,theta,phi,nobs,nclustmax,nloc,z,n){
   tab[as.numeric(names(tmp))]=tmp
   
   #calculate log-probability
-  tmp=matrix(NA,nobs,nclustmax)
-  for (i in 1:nclustmax){
-    ltheta1=matrix(ltheta[i,],nobs,nloc,byrow=T)
-    tmp[,i]=rowSums(dat*ltheta1)+lphi[i]
-  }
-
+  tmp=GetLoglikel(ltheta=ltheta, lphi=lphi,
+                  nobs=nobs, nloc=nloc, nclustmax=nclustmax,
+                  dat=dat)
+  
   #sample z
   lgamma.nloc.psi=lgamma(nloc*psi)
   lgamma.psi=lgamma(psi)

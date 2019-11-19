@@ -1,11 +1,11 @@
 rm(list=ls(all=TRUE))
 library('MCMCpack')
-set.seed(3)
+set.seed(30)
 
 nobs=1000
 nloc=150
 
-nclust=5
+nclust=12
 z.true=z=sample(1:nclust,size=nobs,replace=T)
 theta.true=theta=rdirichlet(nclust,rep(0.01,nloc))
 image(theta.true)

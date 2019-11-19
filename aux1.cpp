@@ -84,4 +84,19 @@ IntegerVector HelperSampleZ(IntegerVector tab, IntegerVector z,
   return z;
 }
 
-  
+//' This function gets log-probab for existing groups (useful to sample z)
+// [[Rcpp::export]]
+NumericMatrix GetLoglikel(NumericMatrix ltheta, NumericVector lphi,
+                          int nobs, int nloc, int nclustmax,
+                          IntegerMatrix dat){
+  NumericMatrix LogLikel(nobs,nclustmax);
+  for (int i=0; i<nobs; i++){
+    for (int k=0; k<nclustmax; k++){
+      for (int l=0; l<nloc; l++){
+        LogLikel(i,k)=LogLikel(i,k)+dat(i,l)*ltheta(k,l);        
+      }
+      LogLikel(i,k)=LogLikel(i,k)+lphi[k];
+    }
+  }
+  return LogLikel;
+}
