@@ -9,6 +9,7 @@ using namespace Rcpp;
 /***************************************************************************************************************************/
 
 // This function helps with multinomial draws
+// [[Rcpp::export]]
 int cat1(double value, NumericVector prob) {
   int res=-1;
   double probcum = 0;
@@ -49,3 +50,38 @@ NumericVector GetPhi(NumericVector vec, int nclustmax) {
   
   return res;
 }
+
+//' This function helps sample z
+// [[Rcpp::export]]
+IntegerVector HelperSampleZ(IntegerVector tab, IntegerVector z,
+                            NumericVector lphi, NumericMatrix LprobTmp, NumericVector CalcInterm,
+                            int nclustmax, int  nloc, int nobs,
+                            IntegerMatrix dat, IntegerVector n,
+                            NumericVector RandUnif) {
+  NumericVector lprob(nclustmax);
+  for (int i=0; i<nobs; i++){
+    tab[z[i]]=tab[z[i]]-1;
+    
+    //calculate lprob
+    for (int k=0; k<nclustmax; k++){
+      if (tab[k]==0){
+        lprob[k]=lphi[z[i]]+CalcInterm[i];
+      }
+      if (tab[k]!=0){
+        lprob[k]=LprobTmp(i,k);
+      }
+    }
+      
+    //get normalized probs
+    lprob=lprob-max(lprob);
+    lprob=exp(lprob);
+    lprob=lprob/sum(lprob);
+      
+    //draw from multinomial distribution
+    z[i]=cat1(RandUnif[i], lprob);
+    tab[z[i]]=tab[z[i]]+1;
+  }
+  return z;
+}
+
+  

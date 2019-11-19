@@ -5,7 +5,7 @@ set.seed(3)
 nobs=1000
 nloc=150
 
-nclust=10
+nclust=5
 z.true=z=sample(1:nclust,size=nobs,replace=T)
 theta.true=theta=rdirichlet(nclust,rep(0.01,nloc))
 image(theta.true)

@@ -2,7 +2,11 @@ plot(res$phi[ngibbs,],type='h')
 
 fim=data.frame(zestim=res$z[ngibbs,],ztrue=z.true)
 fim1=table(fim); fim1
-ordem=c(1,8,3,5,6,4,2,7)
+ordem=numeric()
+for (i in 1:ncol(fim1)){
+  ind=which(fim1[,i]==max(fim1[,i]))
+  ordem=c(ordem,ind)
+}
 fim1[ordem,]
 
 compare=function(true1,estim1){
@@ -11,12 +15,5 @@ compare=function(true1,estim1){
   lines(rango,rango,col='red')
 }
 
-theta1=matrix(res$theta1[ngibbs,],nrow=nclustmax)
-compare(theta1.true,theta1[ordem,])
-
-theta2=matrix(res$theta2[ngibbs,],nrow=nclustmax)
-compare(theta2.true,theta2[ordem,])
-
-theta3=matrix(res$theta3[ngibbs,],nrow=nclustmax)
-compare(theta3.true,theta3[ordem])
-
+theta1=matrix(res$theta[ngibbs,],nrow=nclustmax)
+compare(theta.true,theta1[ordem,])

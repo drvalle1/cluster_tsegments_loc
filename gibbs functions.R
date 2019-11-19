@@ -46,23 +46,14 @@ sample.z=function(dat,theta,phi,nobs,nclustmax,nloc,z,n){
   #sample z
   lgamma.nloc.psi=lgamma(nloc*psi)
   lgamma.psi=lgamma(psi)
-  for (i in 1:nobs){
-    tab[z[i]]=tab[z[i]]-1
-    prob=rep(NA,nclustmax)
-    cond=tab==0
-    prob[ cond]=lphi[z[i]]+lgamma.nloc.psi-nloc*lgamma.psi+sum(lgamma(dat[i,]+psi))-lgamma(n[i]+nloc*psi) #log probability for a new group 
-    prob[!cond]=tmp[i,!cond]
-   
-    #get normalized probs
-    tmp1=prob-max(prob) #for numerical stability
-    tmp2=exp(tmp1) #exponentiate log probability
-    prob=tmp2/sum(tmp2) #normalize to sum to 1
-    
-    #draw from multinomial distrib
-    ind=rmultinom(1,size=1,prob=prob)
-    ind1=which(ind==1)
-    z[i]=ind1
-    tab[ind1]=tab[ind1]+1
-  }
-  z
+  soma.lgamma.dat.psi=rowSums(lgamma(dat+psi))
+  lgamma.n.nloc.psi=lgamma(n+nloc*psi)
+  calc.interm=lgamma.nloc.psi-nloc*lgamma.psi+soma.lgamma.dat.psi-lgamma.n.nloc.psi
+  randunif=runif(nobs)
+  z=HelperSampleZ(tab=tab,z=z-1,
+                  lphi=lphi, LprobTmp=tmp, CalcInterm=calc.interm,
+                  nclustmax=nclustmax, nloc=nloc,nobs=nobs,
+                  dat=dat, n=n,
+                  RandUnif=randunif)
+  z+1
 }
