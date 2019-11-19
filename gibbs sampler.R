@@ -1,8 +1,9 @@
 rm(list=ls(all=TRUE))
+library('Rcpp')
+library('MCMCpack')
 set.seed(1)
 
 setwd('U:\\GIT_models\\cluster_tsegments_loc')
-library('Rcpp')
 sourceCpp('aux1.cpp')
 source('gibbs functions.R')
 

@@ -44,11 +44,13 @@ sample.z=function(dat,theta,phi,nobs,nclustmax,nloc,z,n){
   }
 
   #sample z
+  lgamma.nloc.psi=lgamma(nloc*psi)
+  lgamma.psi=lgamma(psi)
   for (i in 1:nobs){
     tab[z[i]]=tab[z[i]]-1
     prob=rep(NA,nclustmax)
     cond=tab==0
-    prob[ cond]=lphi[z[i]]+lgamma(nloc*psi)-nloc*lgamma(psi)+sum(lgamma(dat[i,]+psi))-lgamma(n[i]+nloc*psi) #log probability for a new group 
+    prob[ cond]=lphi[z[i]]+lgamma.nloc.psi-nloc*lgamma.psi+sum(lgamma(dat[i,]+psi))-lgamma(n[i]+nloc*psi) #log probability for a new group 
     prob[!cond]=tmp[i,!cond]
    
     #get normalized probs
